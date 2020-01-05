@@ -7,7 +7,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/services/cognitiveservices/v2.0/computervision"
 	"github.com/Azure/go-autorest/autorest"
 	"log"
-        "os"
+	"os"
 	"strings"
 	"time"
 )
@@ -41,7 +41,14 @@ func main() {
 	/*
 	 * END - Configure the Computer Vision client
 	 */
-	printedImageURL := "https://i.imgur.com/I9r02n7.png"
+	/*printedImageURL := "https://i.imgur.com/I9r02n7.png"
+	 */
+	//	printedImageURL := "https://s3-ap-southeast-2.amazonaws.com/awm-media/collection/PR82/193.023/large/4164690.JPG"
+	//        printedImageURL := "https://i.imgur.com/6n0uxk9.png" /*SLV avoca*/
+	//        printedImageURL := "https://i.imgur.com/i41tezf.jpg" /*SLV eureka*/
+	printedImageURL := "https://i.imgur.com/YkqQZfB.png" /*George Swinburne*/
+	//        printedImageURL := "https://i.imgur.com/XkJUPRL.png" /*SLV eureka*/
+	//printedImageURL := "https://commons.swinburne.edu.au/file/cd53e247-3e39-458e-8582-9fa0a2a2e120/1/cor-duncan_to_green_1920.jpg"
 	landmarkImageURL := printedImageURL
 	brandsImageURL := printedImageURL
 	facesImageURL := printedImageURL
