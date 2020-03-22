@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PcGts xmlns="http://schema.primaresearch.org/PAGE/gts/pagecontent/2013-07-15" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schema.primaresearch.org/PAGE/gts/pagecontent/2013-07-15 http://schema.primaresearch.org/PAGE/gts/pagecontent/2013-07-15/pagecontent.xsd">
+    <Metadata>
+        <Creator>Transkribus</Creator>
+        <Created>2020-01-06T23:31:21.440+11:00</Created>
+        <LastChange>2020-01-06T23:37:52.585+11:00</LastChange>
+    </Metadata>
+    <Page imageFilename="cor-duncan_to_green_1920.jpg" imageWidth="1748" imageHeight="2227">
+        <ReadingOrder>
+            <OrderedGroup id="ro_1578314272653" caption="Regions reading order">
+                <RegionRefIndexed index="0" regionRef="region_1578313900644_3"/>
+            </OrderedGroup>
+        </ReadingOrder>
+        <TextRegion id="region_1578313900644_3" custom="readingOrder {index:0;}">
+            <Coords points="1322,386 853,386 853,249 1322,249"/>
+        </TextRegion>
+        <TableRegion id="Table_1578314254229_73" custom="readingOrder {index:1;}">
+            <Coords points="-15,-162 -775,-162 -775,-165 -15,-165"/>
+            <TableCell row="0" col="0" id="TableCell_1578314254234_74">
+                <Coords points="-775,-165 -775,-162 -15,-162 -15,-165"/>
+                <CornerPts>0 1 2 3</CornerPts>
+            </TableCell>
+        </TableRegion>
+        <TableRegion id="Table_1578314255754_77" custom="readingOrder {index:2;}">
+            <Coords points="-775,-165 -427,-165 -427,-280 -775,-280"/>
+            <TableCell row="0" col="0" id="TableCell_1578314255755_78">
+                <Coords points="-775,-280 -775,-165 -427,-165 -427,-280"/>
+                <CornerPts>0 1 2 3</CornerPts>
+            </TableCell>
+        </TableRegion>
+        <TableRegion id="Table_1578314259072_81" custom="readingOrder {index:3;}">
+            <Coords points="1452,1223 1876,1223 1876,1690 1452,1690"/>
+            <TableCell row="0" col="0" id="TableCell_1578314259072_82">
+                <Coords points="1452,1223 1452,1690 1876,1690 1876,1223"/>
+                <CornerPts>0 1 2 3</CornerPts>
+            </TableCell>
+        </TableRegion>
+        <TableRegion id="Table_1578314262912_85" custom="readingOrder {index:4;}">
+            <Coords points="991,-357 -1629,-357 -1629,-883 991,-883"/>
+            <TableCell row="0" col="0" id="TableCell_1578314262912_86">
+                <Coords points="-1629,-883 -1629,-357 991,-357 991,-883"/>
+                <CornerPts>0 1 2 3</CornerPts>
+            </TableCell>
+        </TableRegion>
+    </Page>
+</PcGts>

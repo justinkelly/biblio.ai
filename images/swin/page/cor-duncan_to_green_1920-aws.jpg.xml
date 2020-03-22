@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PcGts xmlns="http://schema.primaresearch.org/PAGE/gts/pagecontent/2013-07-15" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schema.primaresearch.org/PAGE/gts/pagecontent/2013-07-15 http://schema.primaresearch.org/PAGE/gts/pagecontent/2013-07-15/pagecontent.xsd">
+    <Metadata>
+        <Creator>Transkribus</Creator>
+        <Created>2020-01-06T23:31:21.440+11:00</Created>
+        <LastChange>2020-01-06T23:37:24.954+11:00</LastChange>
+    </Metadata>
+    <Page imageFilename="cor-duncan_to_green_1920.jpg" imageWidth="1748" imageHeight="2227">
+        <ReadingOrder>
+            <OrderedGroup id="ro_1578314245035" caption="Regions reading order">
+                <RegionRefIndexed index="0" regionRef="region_1578313900644_3"/>
+            </OrderedGroup>
+        </ReadingOrder>
+        <TextRegion id="region_1578313900644_3" custom="readingOrder {index:0;}">
+            <Coords points="1322,386 853,386 853,249 1322,249"/>
+        </TextRegion>
+    </Page>
+</PcGts>
