@@ -5,7 +5,8 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"github.com/Azure/azure-sdk-for-go/services/cognitiveservices/v2.0/computervision"
+	//"github.com/Azure/azure-sdk-for-go/services/preview/cognitiveservices/v3.0-preview/computervision"
+        "github.com/Azure/azure-sdk-for-go/services/cognitiveservices/v2.0/computervision"
 	"github.com/Azure/go-autorest/autorest"
 	"log"
 	"os"
@@ -20,9 +21,9 @@ var computerVisionContext context.Context
 var database, _ = sql.Open("sqlite3", "./azure.db")
 
 func main() {
-	//	imageURL := "https://commons.swinburne.edu.au/file/cd53e247-3e39-458e-8582-9fa0a2a2e120/1/cor-duncan_to_green_1920.jpg"
+		imageURL := "https://commons.swinburne.edu.au/file/cd53e247-3e39-458e-8582-9fa0a2a2e120/1/cor-duncan_to_green_1920.jpg"
 	//        imageURL := "https://rosetta.slv.vic.gov.au/delivery/DeliveryManagerServlet?dps_func=stream&dps_pid=FL16406745"
-	imageURL := "https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2020/03/931/524/Ellen-DeGeneres-Jennifer-Aniston-Getty.jpg"
+//	imageURL := "https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2020/03/931/524/Ellen-DeGeneres-Jennifer-Aniston-Getty.jpg"
 	//        imageURL :=  "https://rosetta.slv.vic.gov.au/delivery/DeliveryManagerServlet?dps_func=stream&dps_pid=FL18983698"
 	//        imageURL := "https://rosetta.slv.vic.gov.au/delivery/DeliveryManagerServlet?dps_func=stream&dps_pid=FL18980978"
 	//        imageURL := "https://rosetta.slv.vic.gov.au/delivery/DeliveryManagerServlet?dps_func=stream&dps_pid=FL16464085"
@@ -49,6 +50,8 @@ func main() {
 	statement_entity, _ = database.Prepare("CREATE TABLE IF NOT EXISTS item_celebrity (id INTEGER PRIMARY KEY, item_id INTEGER, value TEXT,score TEXT)")
 	statement_entity.Exec()
 	statement_entity, _ = database.Prepare("CREATE TABLE IF NOT EXISTS item_landmark (id INTEGER PRIMARY KEY, item_id INTEGER, value TEXT,score TEXT)")
+	statement_entity.Exec()
+	statement_entity, _ = database.Prepare("CREATE TABLE IF NOT EXISTS item_text_analytic (id INTEGER PRIMARY KEY, item_id INTEGER, value TEXT, length, INTERER, offset INTEGER, type TEXT, score TEXT)")
 	statement_entity.Exec()
 
 	stmt, err := database.Prepare("select id, url from item where url = ? limit 1")
@@ -125,6 +128,8 @@ func main() {
 	DetectAdultOrRacyContentRemoteImage(computerVisionClient, imageURL, item_id)
 	DetectColorSchemeRemoteImage(computerVisionClient, imageURL, item_id)
 	DetectDomainSpecificContentRemoteImage(computerVisionClient, imageURL, item_id)
+        
+        text_analytic(item_id) 
 
 }
 
@@ -479,6 +484,7 @@ func DetectDomainSpecificContentRemoteImage(client computervision.BaseClient, re
 
 	// Marshal the output from AnalyzeImageByDomain into JSON.
 	data, err := json.MarshalIndent(celebrities.Result, "", "\t")
+      fmt.Println(string(data))
 
 	// Define structs for which to unmarshal the JSON.
 	type Celebrities struct {
