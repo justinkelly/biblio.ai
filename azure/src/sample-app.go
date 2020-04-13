@@ -21,9 +21,9 @@ var computerVisionContext context.Context
 var database, _ = sql.Open("sqlite3", "./azure.db")
 
 func main() {
-//	imageURL := "https://commons.swinburne.edu.au/file/cd53e247-3e39-458e-8582-9fa0a2a2e120/1/cor-duncan_to_green_1920.jpg"
+	imageURL := "https://commons.swinburne.edu.au/file/cd53e247-3e39-458e-8582-9fa0a2a2e120/1/cor-duncan_to_green_1920.jpg"
 	//        imageURL := "https://rosetta.slv.vic.gov.au/delivery/DeliveryManagerServlet?dps_func=stream&dps_pid=FL16406745"
-	imageURL := "https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2020/03/931/524/Ellen-DeGeneres-Jennifer-Aniston-Getty.jpg"
+//	imageURL := "https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2020/03/931/524/Ellen-DeGeneres-Jennifer-Aniston-Getty.jpg"
 	//        imageURL :=  "https://rosetta.slv.vic.gov.au/delivery/DeliveryManagerServlet?dps_func=stream&dps_pid=FL18983698"
 	//        imageURL := "https://rosetta.slv.vic.gov.au/delivery/DeliveryManagerServlet?dps_func=stream&dps_pid=FL18980978"
 	//        imageURL := "https://rosetta.slv.vic.gov.au/delivery/DeliveryManagerServlet?dps_func=stream&dps_pid=FL16464085"
@@ -139,6 +139,7 @@ func main() {
         ExtractEntities(item_id)
         DetectLanguage(item_id)
         SentimentAnalysis(item_id)
+        ExtractKeyPhrases(item_id)
 
 
 }
