@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"context"
 	"database/sql"
 	"encoding/json"
@@ -21,7 +22,11 @@ var computerVisionContext context.Context
 var database, _ = sql.Open("sqlite3", "./azure.db")
 
 func main() {
-	imageURL := "https://commons.swinburne.edu.au/file/cd53e247-3e39-458e-8582-9fa0a2a2e120/1/cor-duncan_to_green_1920.jpg"
+   urlFlag := flag.String("url", "https://commons.swinburne.edu.au/file/cd53e247-3e39-458e-8582-9fa0a2a2e120/1/cor-duncan_to_green_1920.jpg", "a string")
+flag.Parse()
+
+	imageURL := *urlFlag
+	//imageURL := "https://commons.swinburne.edu.au/file/cd53e247-3e39-458e-8582-9fa0a2a2e120/1/cor-duncan_to_green_1920.jpg"
 	//        imageURL := "https://rosetta.slv.vic.gov.au/delivery/DeliveryManagerServlet?dps_func=stream&dps_pid=FL16406745"
 //	imageURL := "https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2020/03/931/524/Ellen-DeGeneres-Jennifer-Aniston-Getty.jpg"
 	//        imageURL :=  "https://rosetta.slv.vic.gov.au/delivery/DeliveryManagerServlet?dps_func=stream&dps_pid=FL18983698"
@@ -29,35 +34,37 @@ func main() {
 	//        imageURL := "https://rosetta.slv.vic.gov.au/delivery/DeliveryManagerServlet?dps_func=stream&dps_pid=FL16464085"
 	statement, _ := database.Prepare("CREATE TABLE IF NOT EXISTS item (id INTEGER PRIMARY KEY, url TEXT)")
 	statement.Exec()
-	statement_entity, _ := database.Prepare("CREATE TABLE IF NOT EXISTS item_text (id INTEGER PRIMARY KEY, item_id INTEGER, value TEXT,score TEXT)")
+	statement_entity, _ := database.Prepare("CREATE TABLE IF NOT EXISTS item_text (id INTEGER PRIMARY KEY, item_id INTEGER, timestamp INTEGER, value TEXT,score TEXT)")
 	statement_entity.Exec()
-	statement_entity, _ = database.Prepare("CREATE TABLE IF NOT EXISTS item_description (id INTEGER PRIMARY KEY, item_id INTEGER, value TEXT,score TEXT)")
+	statement_entity, _ = database.Prepare("CREATE TABLE IF NOT EXISTS item_description (id INTEGER PRIMARY KEY, item_id INTEGER, timestamp INTEGER,  value TEXT,score TEXT)")
 	statement_entity.Exec()
-	statement_entity, _ = database.Prepare("CREATE TABLE IF NOT EXISTS item_category (id INTEGER PRIMARY KEY, item_id INTEGER, value TEXT,score TEXT)")
+	statement_entity, _ = database.Prepare("CREATE TABLE IF NOT EXISTS item_category (id INTEGER PRIMARY KEY, item_id INTEGER,  timestamp INTEGER, value TEXT,score TEXT)")
 	statement_entity.Exec()
-	statement_entity, _ = database.Prepare("CREATE TABLE IF NOT EXISTS item_tag (id INTEGER PRIMARY KEY, item_id INTEGER, value TEXT,score TEXT)")
+	statement_entity, _ = database.Prepare("CREATE TABLE IF NOT EXISTS item_tag (id INTEGER PRIMARY KEY, item_id INTEGER, timestamp INTEGER,  value TEXT,score TEXT)")
 	statement_entity.Exec()
-	statement_entity, _ = database.Prepare("CREATE TABLE IF NOT EXISTS item_object (id INTEGER PRIMARY KEY, item_id INTEGER, value TEXT, x TEXT, y TEXT, width TEXT, height TEXT, score TEXT)")
+	statement_entity, _ = database.Prepare("CREATE TABLE IF NOT EXISTS item_object (id INTEGER PRIMARY KEY, item_id INTEGER,  timestamp INTEGER, value TEXT, x TEXT, y TEXT, width TEXT, height TEXT, score TEXT)")
 	statement_entity.Exec()
-	statement_entity, _ = database.Prepare("CREATE TABLE IF NOT EXISTS item_brand (id INTEGER PRIMARY KEY, item_id INTEGER, value TEXT, x TEXT, y TEXT, width TEXT, height TEXT, score TEXT)")
+	statement_entity, _ = database.Prepare("CREATE TABLE IF NOT EXISTS item_brand (id INTEGER PRIMARY KEY, item_id INTEGER,  timestamp INTEGER, value TEXT, x TEXT, y TEXT, width TEXT, height TEXT, score TEXT)")
 	statement_entity.Exec()
-	statement_entity, _ = database.Prepare("CREATE TABLE IF NOT EXISTS item_face (id INTEGER PRIMARY KEY, item_id INTEGER, gender TEXT, age TEXT, left TEXT, top TEXT, width TEXT, height TEXT)")
+	statement_entity, _ = database.Prepare("CREATE TABLE IF NOT EXISTS item_face (id INTEGER PRIMARY KEY, item_id INTEGER, timestamp INTEGER,  gender TEXT, age TEXT, left TEXT, top TEXT, width TEXT, height TEXT)")
 	statement_entity.Exec()
-	statement_entity, _ = database.Prepare("CREATE TABLE IF NOT EXISTS item_color (id INTEGER PRIMARY KEY, item_id INTEGER, black_and_white TEXT, accent_color TEXT, dominant_color_background TEXT, dominant_color_foreground TEXT, dominant_colors TEXT)")
+	statement_entity, _ = database.Prepare("CREATE TABLE IF NOT EXISTS item_color (id INTEGER PRIMARY KEY, item_id INTEGER, timestamp INTEGER,  black_and_white TEXT, accent_color TEXT, dominant_color_background TEXT, dominant_color_foreground TEXT, dominant_colors TEXT)")
 	statement_entity.Exec()
-	statement_entity, _ = database.Prepare("CREATE TABLE IF NOT EXISTS item_adult (id INTEGER PRIMARY KEY, item_id INTEGER, value TEXT,score TEXT)")
+	statement_entity, _ = database.Prepare("CREATE TABLE IF NOT EXISTS item_adult (id INTEGER PRIMARY KEY, item_id INTEGER,  timestamp INTEGER, value TEXT,score TEXT)")
 	statement_entity.Exec()
-	statement_entity, _ = database.Prepare("CREATE TABLE IF NOT EXISTS item_racy (id INTEGER PRIMARY KEY, item_id INTEGER, value TEXT,score TEXT)")
+	statement_entity, _ = database.Prepare("CREATE TABLE IF NOT EXISTS item_racy (id INTEGER PRIMARY KEY, item_id INTEGER,  timestamp INTEGER, value TEXT,score TEXT)")
 	statement_entity.Exec()
-	statement_entity, _ = database.Prepare("CREATE TABLE IF NOT EXISTS item_celebrity (id INTEGER PRIMARY KEY, item_id INTEGER, value TEXT,score TEXT)")
+	statement_entity, _ = database.Prepare("CREATE TABLE IF NOT EXISTS item_celebrity (id INTEGER PRIMARY KEY, item_id INTEGER,  timestamp INTEGER, value TEXT,score TEXT)")
 	statement_entity.Exec()
-	statement_entity, _ = database.Prepare("CREATE TABLE IF NOT EXISTS item_landmark (id INTEGER PRIMARY KEY, item_id INTEGER, value TEXT,score TEXT)")
+	statement_entity, _ = database.Prepare("CREATE TABLE IF NOT EXISTS item_landmark (id INTEGER PRIMARY KEY, item_id INTEGER, timestamp INTEGER,  value TEXT,score TEXT)")
 	statement_entity.Exec()
-	statement_entity, _ = database.Prepare("CREATE TABLE IF NOT EXISTS item_text_entity (id INTEGER PRIMARY KEY, item_id INTEGER, value TEXT, length INTERER, offset INTEGER, type TEXT, sub_type TEXT, score TEXT)")
+	statement_entity, _ = database.Prepare("CREATE TABLE IF NOT EXISTS item_text_entity (id INTEGER PRIMARY KEY, item_id INTEGER, timestamp INTEGER,  value TEXT, length INTERER, offset INTEGER, type TEXT, sub_type TEXT, score TEXT)")
 	statement_entity.Exec()
-	statement_entity, _ = database.Prepare("CREATE TABLE IF NOT EXISTS item_text_language (id INTEGER PRIMARY KEY, item_id INTEGER, value TEXT, score TEXT)")
+	statement_entity, _ = database.Prepare("CREATE TABLE IF NOT EXISTS item_text_language (id INTEGER PRIMARY KEY, item_id INTEGER, timestamp INTEGER,  value TEXT, code TEXT, score TEXT)")
 	statement_entity.Exec()
-	statement_entity, _ = database.Prepare("CREATE TABLE IF NOT EXISTS item_text_sentiment (id INTEGER PRIMARY KEY, item_id INTEGER, score TEXT)")
+	statement_entity, _ = database.Prepare("CREATE TABLE IF NOT EXISTS item_text_sentiment (id INTEGER PRIMARY KEY, item_id INTEGER, timestamp INTEGER,  score TEXT)")
+	statement_entity.Exec()
+	statement_entity, _ = database.Prepare("CREATE TABLE IF NOT EXISTS item_text_key_phrase (id INTEGER PRIMARY KEY, item_id INTEGER, timestamp INTEGER,  value TEXT)")
 	statement_entity.Exec()
 
 	stmt, err := database.Prepare("select id, url from item where url = ? limit 1")
@@ -86,7 +93,7 @@ func main() {
 	fmt.Println(item_id)
 	fmt.Println("Item URL")
 	fmt.Println(imageURL)
-
+        timestamp  := time.Now().Unix()
 	/*
 	 * Configure the Computer Vision client
 	 * Set environment variables for COMPUTER_VISION_SUBSCRIPTION_KEY and COMPUTER_VISION_ENDPOINT,
@@ -122,29 +129,30 @@ func main() {
 	//printedImageURL := "https://commons.swinburne.edu.au/file/cd53e247-3e39-458e-8582-9fa0a2a2e120/1/cor-duncan_to_green_1920.jpg"
 	///* SWIn letteer
 	// Analyze text in an image, remote
-	BatchReadFileRemoteImage(computerVisionClient, imageURL, item_id)
+	BatchReadFileRemoteImage(computerVisionClient, imageURL, item_id, timestamp)
 
 	// Analyze features of an image, remote
-	DescribeRemoteImage(computerVisionClient, imageURL, item_id)
-	CategorizeRemoteImage(computerVisionClient, imageURL, item_id)
-	TagRemoteImage(computerVisionClient, imageURL, item_id)
-	DetectFacesRemoteImage(computerVisionClient, imageURL, item_id)
-	DetectObjectsRemoteImage(computerVisionClient, imageURL, item_id)
-	DetectBrandsRemoteImage(computerVisionClient, imageURL, item_id)
-	DetectAdultOrRacyContentRemoteImage(computerVisionClient, imageURL, item_id)
-	DetectColorSchemeRemoteImage(computerVisionClient, imageURL, item_id)
-	DetectDomainSpecificContentRemoteImage(computerVisionClient, imageURL, item_id)
+	DescribeRemoteImage(computerVisionClient, imageURL, item_id, timestamp)
+	CategorizeRemoteImage(computerVisionClient, imageURL, item_id, timestamp)
+	TagRemoteImage(computerVisionClient, imageURL, item_id, timestamp)
+	DetectFacesRemoteImage(computerVisionClient, imageURL, item_id, timestamp)
+	DetectObjectsRemoteImage(computerVisionClient, imageURL, item_id, timestamp)
+	DetectBrandsRemoteImage(computerVisionClient, imageURL, item_id, timestamp)
+	DetectAdultOrRacyContentRemoteImage(computerVisionClient, imageURL, item_id, timestamp)
+	DetectColorSchemeRemoteImage(computerVisionClient, imageURL, item_id, timestamp)
+	DetectDomainSpecificContentRemoteImage(computerVisionClient, imageURL, item_id, timestamp)
         
         //text_analytic(item_id) 
-        ExtractEntities(item_id)
-        DetectLanguage(item_id)
-        SentimentAnalysis(item_id)
-        ExtractKeyPhrases(item_id)
+        DetectLanguage(item_id, timestamp)
+        ExtractEntities(item_id, timestamp)
+        SentimentAnalysis(item_id, timestamp)
+        ExtractKeyPhrases(item_id, timestamp)
+        Get(item_id)
 
 
 }
 
-func DescribeRemoteImage(client computervision.BaseClient, remoteImageURL string, item_id int64) {
+func DescribeRemoteImage(client computervision.BaseClient, remoteImageURL string, item_id int64, timestamp int64) {
 	fmt.Println("-----------------------------------------")
 	fmt.Println("DESCRIBE IMAGE - remote")
 	fmt.Println()
@@ -177,8 +185,8 @@ func DescribeRemoteImage(client computervision.BaseClient, remoteImageURL string
 	}
 	fmt.Println()
 
-	statement, _ := database.Prepare("INSERT INTO item_description (item_id, value, score) VALUES (?, ?, ?)")
-	result, err := statement.Exec(item_id, caption_value, caption_confidence)
+	statement, _ := database.Prepare("INSERT INTO item_description (item_id, timestamp, value, score) VALUES (?, ?, ?, ?)")
+	result, err := statement.Exec(item_id, timestamp, caption_value, caption_confidence)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -189,7 +197,7 @@ func DescribeRemoteImage(client computervision.BaseClient, remoteImageURL string
 	fmt.Println(iid)
 
 }
-func CategorizeRemoteImage(client computervision.BaseClient, remoteImageURL string, item_id int64) {
+func CategorizeRemoteImage(client computervision.BaseClient, remoteImageURL string, item_id int64, timestamp int64) {
 	fmt.Println("-----------------------------------------")
 	fmt.Println("CATEGORIZE IMAGE - remote")
 	fmt.Println()
@@ -214,8 +222,8 @@ func CategorizeRemoteImage(client computervision.BaseClient, remoteImageURL stri
 		for _, category := range *imageAnalysis.Categories {
 			fmt.Printf("'%v' with confidence %.2f%%\n", *category.Name, *category.Score*100)
 
-			statement, _ := database.Prepare("INSERT INTO item_category (item_id, value, score) VALUES (?, ?, ?)")
-			result, err := statement.Exec(item_id, *category.Name, *category.Score)
+			statement, _ := database.Prepare("INSERT INTO item_category (item_id, timestamp,  value, score) VALUES (?, ?, ?, ?)")
+			result, err := statement.Exec(item_id, timestamp,  *category.Name, *category.Score)
 			fmt.Println("Entity - Last Insert ID")
 			iid, err := result.LastInsertId()
 			fmt.Println(iid)
@@ -229,7 +237,7 @@ func CategorizeRemoteImage(client computervision.BaseClient, remoteImageURL stri
 
 }
 
-func TagRemoteImage(client computervision.BaseClient, remoteImageURL string, item_id int64) {
+func TagRemoteImage(client computervision.BaseClient, remoteImageURL string, item_id int64, timestamp int64) {
 	fmt.Println("-----------------------------------------")
 	fmt.Println("TAG IMAGE - remote")
 	fmt.Println()
@@ -251,8 +259,8 @@ func TagRemoteImage(client computervision.BaseClient, remoteImageURL string, ite
 		for _, tag := range *remoteImageTags.Tags {
 			fmt.Printf("'%v' with confidence %.2f%%\n", *tag.Name, *tag.Confidence*100)
 
-			statement, _ := database.Prepare("INSERT INTO item_tag (item_id, value, score) VALUES (?, ?, ?)")
-			result, err := statement.Exec(item_id, *tag.Name, *tag.Confidence)
+			statement, _ := database.Prepare("INSERT INTO item_tag (item_id, timestamp,  value, score) VALUES (?, ?, ?, ?)")
+			result, err := statement.Exec(item_id, timestamp,  *tag.Name, *tag.Confidence)
 			fmt.Println("Entity - Last Insert ID")
 			iid, err := result.LastInsertId()
 			fmt.Println(iid)
@@ -265,7 +273,7 @@ func TagRemoteImage(client computervision.BaseClient, remoteImageURL string, ite
 	fmt.Println()
 }
 
-func DetectObjectsRemoteImage(client computervision.BaseClient, remoteImageURL string, item_id int64) {
+func DetectObjectsRemoteImage(client computervision.BaseClient, remoteImageURL string, item_id int64, timestamp int64) {
 	fmt.Println("-----------------------------------------")
 	fmt.Println("DETECT OBJECTS - remote")
 	fmt.Println()
@@ -291,8 +299,8 @@ func DetectObjectsRemoteImage(client computervision.BaseClient, remoteImageURL s
 				*object.Rectangle.X, *object.Rectangle.X+*object.Rectangle.W,
 				*object.Rectangle.Y, *object.Rectangle.Y+*object.Rectangle.H)
 
-			statement, _ := database.Prepare("INSERT INTO item_object (item_id, value, x, y, width, height, score) VALUES (?, ?, ?, ?, ?, ?, ?)")
-			result, err := statement.Exec(item_id, *object.Object, *object.Rectangle.X, *object.Rectangle.Y, *object.Rectangle.W, *object.Rectangle.H, *object.Confidence)
+			statement, _ := database.Prepare("INSERT INTO item_object (item_id, timestamp,  value, x, y, width, height, score) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
+			result, err := statement.Exec(item_id, timestamp,  *object.Object, *object.Rectangle.X, *object.Rectangle.Y, *object.Rectangle.W, *object.Rectangle.H, *object.Confidence)
 			fmt.Println("Entity - Last Insert ID")
 			iid, err := result.LastInsertId()
 			fmt.Println(iid)
@@ -305,7 +313,7 @@ func DetectObjectsRemoteImage(client computervision.BaseClient, remoteImageURL s
 	fmt.Println()
 }
 
-func DetectBrandsRemoteImage(client computervision.BaseClient, remoteImageURL string, item_id int64) {
+func DetectBrandsRemoteImage(client computervision.BaseClient, remoteImageURL string, item_id int64, timestamp int64) {
 	fmt.Println("-----------------------------------------")
 	fmt.Println("DETECT BRANDS - remote")
 	fmt.Println()
@@ -336,8 +344,8 @@ func DetectBrandsRemoteImage(client computervision.BaseClient, remoteImageURL st
 				*brand.Rectangle.X, *brand.Rectangle.X+*brand.Rectangle.W,
 				*brand.Rectangle.Y, *brand.Rectangle.Y+*brand.Rectangle.H)
 
-			statement, _ := database.Prepare("INSERT INTO item_brand (item_id, value, x, y, width, height, score) VALUES (?, ?, ?, ?, ?, ?, ?)")
-			result, err := statement.Exec(item_id, *brand.Name, *brand.Rectangle.X, *brand.Rectangle.Y, *brand.Rectangle.W, *brand.Rectangle.H, *brand.Confidence)
+			statement, _ := database.Prepare("INSERT INTO item_brand (item_id,  timestamp, value, x, y, width, height, score) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
+			result, err := statement.Exec(item_id,  timestamp, *brand.Name, *brand.Rectangle.X, *brand.Rectangle.Y, *brand.Rectangle.W, *brand.Rectangle.H, *brand.Confidence)
 			fmt.Println("Entity - Last Insert ID")
 			iid, err := result.LastInsertId()
 			fmt.Println(iid)
@@ -350,7 +358,7 @@ func DetectBrandsRemoteImage(client computervision.BaseClient, remoteImageURL st
 	fmt.Println()
 }
 
-func DetectFacesRemoteImage(client computervision.BaseClient, remoteImageURL string, item_id int64) {
+func DetectFacesRemoteImage(client computervision.BaseClient, remoteImageURL string, item_id int64, timestamp int64) {
 	fmt.Println("-----------------------------------------")
 	fmt.Println("DETECT FACES - remote")
 	fmt.Println()
@@ -381,8 +389,8 @@ func DetectFacesRemoteImage(client computervision.BaseClient, remoteImageURL str
 				*face.FaceRectangle.Left+*face.FaceRectangle.Width,
 				*face.FaceRectangle.Top+*face.FaceRectangle.Height)
 
-			statement, _ := database.Prepare("INSERT INTO item_face (item_id, gender, age, left, top, width, height) VALUES (?, ?, ?, ?, ?, ?, ?)")
-			result, err := statement.Exec(item_id, face.Gender, *face.Age, *face.FaceRectangle.Left, *face.FaceRectangle.Top, *face.FaceRectangle.Width, *face.FaceRectangle.Height)
+			statement, _ := database.Prepare("INSERT INTO item_face (item_id, timestamp,  gender, age, left, top, width, height) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
+			result, err := statement.Exec(item_id,  timestamp, face.Gender, *face.Age, *face.FaceRectangle.Left, *face.FaceRectangle.Top, *face.FaceRectangle.Width, *face.FaceRectangle.Height)
 			fmt.Println("Entity - Last Insert ID")
 			iid, err := result.LastInsertId()
 			fmt.Println(iid)
@@ -395,7 +403,7 @@ func DetectFacesRemoteImage(client computervision.BaseClient, remoteImageURL str
 	fmt.Println()
 }
 
-func DetectAdultOrRacyContentRemoteImage(client computervision.BaseClient, remoteImageURL string, item_id int64) {
+func DetectAdultOrRacyContentRemoteImage(client computervision.BaseClient, remoteImageURL string, item_id int64, timestamp int64) {
 	fmt.Println("-----------------------------------------")
 	fmt.Println("DETECT ADULT OR RACY CONTENT - remote")
 	fmt.Println()
@@ -419,8 +427,8 @@ func DetectAdultOrRacyContentRemoteImage(client computervision.BaseClient, remot
 	fmt.Println("Analyzing remote image for adult or racy content: ")
 	fmt.Printf("Is adult content: %v with confidence %.2f%%\n", *imageAnalysis.Adult.IsAdultContent, *imageAnalysis.Adult.AdultScore*100)
 
-	statement, _ := database.Prepare("INSERT INTO item_adult (item_id, value, score) VALUES (?, ?, ?)")
-	result, err := statement.Exec(item_id, *imageAnalysis.Adult.IsAdultContent, *imageAnalysis.Adult.AdultScore)
+	statement, _ := database.Prepare("INSERT INTO item_adult (item_id, timestamp,  value, score) VALUES (?, ?, ?, ?)")
+	result, err := statement.Exec(item_id,  timestamp, *imageAnalysis.Adult.IsAdultContent, *imageAnalysis.Adult.AdultScore)
 	fmt.Println("Entity - Last Insert ID")
 	iid, err := result.LastInsertId()
 	fmt.Println(iid)
@@ -431,8 +439,8 @@ func DetectAdultOrRacyContentRemoteImage(client computervision.BaseClient, remot
 
 	fmt.Printf("Has racy content: %v with confidence %.2f%%\n", *imageAnalysis.Adult.IsRacyContent, *imageAnalysis.Adult.RacyScore*100)
 
-	statement, _ = database.Prepare("INSERT INTO item_racy (item_id, value, score) VALUES (?, ?, ?)")
-	result, err = statement.Exec(item_id, *imageAnalysis.Adult.IsRacyContent, *imageAnalysis.Adult.RacyScore)
+	statement, _ = database.Prepare("INSERT INTO item_racy (item_id, timestamp,  value, score) VALUES (?, ?, ?, ?)")
+	result, err = statement.Exec(item_id, timestamp,  *imageAnalysis.Adult.IsRacyContent, *imageAnalysis.Adult.RacyScore)
 	fmt.Println("Entity - Last Insert ID")
 	iid, err = result.LastInsertId()
 	fmt.Println(iid)
@@ -444,7 +452,7 @@ func DetectAdultOrRacyContentRemoteImage(client computervision.BaseClient, remot
 	fmt.Println()
 }
 
-func DetectColorSchemeRemoteImage(client computervision.BaseClient, remoteImageURL string, item_id int64) {
+func DetectColorSchemeRemoteImage(client computervision.BaseClient, remoteImageURL string, item_id int64, timestamp int64) {
 	fmt.Println("-----------------------------------------")
 	fmt.Println("DETECT COLOR SCHEME - remote")
 	fmt.Println()
@@ -471,8 +479,8 @@ func DetectColorSchemeRemoteImage(client computervision.BaseClient, remoteImageU
 	fmt.Printf("Dominant colors: %v\n", strings.Join(*imageAnalysis.Color.DominantColors, ", "))
 	fmt.Println()
 
-	statement, _ := database.Prepare("INSERT INTO item_color (item_id, black_and_white, accent_color, dominant_color_background, dominant_color_foreground, dominant_colors) VALUES (?, ?, ?, ?, ?, ?)")
-	result, err := statement.Exec(item_id, *imageAnalysis.Color.IsBWImg, *imageAnalysis.Color.AccentColor, *imageAnalysis.Color.DominantColorBackground, *imageAnalysis.Color.DominantColorForeground, strings.Join(*imageAnalysis.Color.DominantColors, ", "))
+	statement, _ := database.Prepare("INSERT INTO item_color (item_id, timestamp,  black_and_white, accent_color, dominant_color_background, dominant_color_foreground, dominant_colors) VALUES (?, ?, ?, ?, ?, ?, ?)")
+	result, err := statement.Exec(item_id, timestamp,  *imageAnalysis.Color.IsBWImg, *imageAnalysis.Color.AccentColor, *imageAnalysis.Color.DominantColorBackground, *imageAnalysis.Color.DominantColorForeground, strings.Join(*imageAnalysis.Color.DominantColors, ", "))
 	fmt.Println("Entity - Last Insert ID")
 	iid, err := result.LastInsertId()
 	fmt.Println(iid)
@@ -482,7 +490,7 @@ func DetectColorSchemeRemoteImage(client computervision.BaseClient, remoteImageU
 	}
 }
 
-func DetectDomainSpecificContentRemoteImage(client computervision.BaseClient, remoteImageURL string, item_id int64) {
+func DetectDomainSpecificContentRemoteImage(client computervision.BaseClient, remoteImageURL string, item_id int64, timestamp int64) {
 	fmt.Println("-----------------------------------------")
 	fmt.Println("DETECT DOMAIN-SPECIFIC CONTENT - remote")
 	fmt.Println()
@@ -533,8 +541,8 @@ func DetectDomainSpecificContentRemoteImage(client computervision.BaseClient, re
 			fmt.Printf("name: %v\n", celebrity.Name)
 			fmt.Printf("confidence: %.2f%%\n", celebrity.Confidence)
 
-			statement, _ := database.Prepare("INSERT INTO item_celebrity (item_id, value, score ) VALUES (?, ?, ?)")
-			result, err := statement.Exec(item_id, celebrity.Name, celebrity.Confidence)
+			statement, _ := database.Prepare("INSERT INTO item_celebrity (item_id, timestamp,  value, score ) VALUES (?, ?, ?, ?)")
+			result, err := statement.Exec(item_id, timestamp,  celebrity.Name, celebrity.Confidence)
 			fmt.Println("Entity - Last Insert ID")
 			iid, err := result.LastInsertId()
 			fmt.Println(iid)
@@ -584,8 +592,8 @@ func DetectDomainSpecificContentRemoteImage(client computervision.BaseClient, re
 		for _, landmark := range landmarkResult.Landmarks {
 			fmt.Printf("name: %v\n", landmark.Name)
 
-			statement, _ := database.Prepare("INSERT INTO item_landmark (item_id, value, score ) VALUES (?, ?, ?)")
-			result, err := statement.Exec(item_id, landmark.Name, landmark.Confidence)
+			statement, _ := database.Prepare("INSERT INTO item_landmark (item_id,  timestamp, value, score ) VALUES (?, ?, ?, ?)")
+			result, err := statement.Exec(item_id,  timestamp, landmark.Name, landmark.Confidence)
 			fmt.Println("Entity - Last Insert ID")
 			iid, err := result.LastInsertId()
 			fmt.Println(iid)
@@ -598,7 +606,7 @@ func DetectDomainSpecificContentRemoteImage(client computervision.BaseClient, re
 	fmt.Println()
 }
 
-func BatchReadFileRemoteImage(client computervision.BaseClient, remoteImageURL string, item_id int64) {
+func BatchReadFileRemoteImage(client computervision.BaseClient, remoteImageURL string, item_id int64, timestamp int64) {
 	fmt.Println("-----------------------------------------")
 	fmt.Println("BATCH READ FILE - remote")
 	fmt.Println()
@@ -648,11 +656,11 @@ func BatchReadFileRemoteImage(client computervision.BaseClient, remoteImageURL s
 	for _, recResult := range *(readOperationResult.RecognitionResults) {
 		for _, line := range *recResult.Lines {
 			fmt.Println(*line.Text)
-			text_value += *line.Text
+			text_value += " " + *line.Text
 		}
 	}
-	statement, _ := database.Prepare("INSERT INTO item_text (item_id, value, score) VALUES (?, ?, ?)")
-	result, err := statement.Exec(item_id, text_value, 0)
+	statement, _ := database.Prepare("INSERT INTO item_text (item_id, timestamp,  value, score) VALUES (?, ?, ?, ?)")
+	result, err := statement.Exec(item_id, timestamp, text_value, 0)
 	if err != nil {
 		fmt.Println(err)
 		return
